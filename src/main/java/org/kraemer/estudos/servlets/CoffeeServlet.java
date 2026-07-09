@@ -35,7 +35,7 @@ public class CoffeeServlet extends HttpServlet {
 
     }
 
-    protected void findAll(HttpServletRequest req, HttpServletResponse resp)
+    private void findAll(HttpServletRequest req, HttpServletResponse resp)
             throws StreamWriteException, DatabindException, IOException {
         var allCoffees = repository.listall();
 
@@ -44,7 +44,7 @@ public class CoffeeServlet extends HttpServlet {
         mapper.writeValue(resp.getWriter(), allCoffees);
     }
 
-    protected void findById(HttpServletRequest req, HttpServletResponse resp)
+    private void findById(HttpServletRequest req, HttpServletResponse resp)
             throws StreamWriteException, DatabindException, IOException {
 
         String pathInfo = req.getPathInfo();
