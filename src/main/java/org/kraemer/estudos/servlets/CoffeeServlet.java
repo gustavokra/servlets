@@ -19,7 +19,8 @@ public class CoffeeServlet extends HttpServlet {
 
     @Inject
     private CafeRepository repository;
-    ObjectMapper mapper = new ObjectMapper();
+    @Inject
+    private ObjectMapper mapper;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
