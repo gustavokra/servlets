@@ -3,8 +3,6 @@ package org.kraemer.estudos.servlets;
 import java.io.IOException;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.exc.StreamWriteException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.inject.Inject;
@@ -14,45 +12,45 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/coffees_servlet/*")
+@WebServlet("coffee_servlet")
 public class CoffeeServlet extends HttpServlet {
 
     @Inject
-    private CafeRepository repository;
+    private CafeRepository repo;
+
     @Inject
     private ObjectMapper mapper;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
-        String pathInfo = req.getPathInfo(); // "/1"
+        String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
             findAll(req, resp);
         } else {
             findById(req, resp);
         }
-
     }
 
     private void findAll(HttpServletRequest req, HttpServletResponse resp)
-            throws StreamWriteException, DatabindException, IOException {
-        var allCoffees = repository.listall();
+            throws IOException {
+
+        var allCoffees = repo.listall();
 
         resp.setContentType("application/json");
-
         mapper.writeValue(resp.getWriter(), allCoffees);
+
     }
 
     private void findById(HttpServletRequest req, HttpServletResponse resp)
-            throws StreamWriteException, DatabindException, IOException {
+            throws IOException {
 
         String pathInfo = req.getPathInfo();
 
         Long id = Long.parseLong(pathInfo.substring(1));
 
-        Optional<Coffee> coffee = repository.findById(id);
+        Optional<Coffee> coffee = repo.findById(id);
 
         if (coffee.isEmpty()) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -67,30 +65,34 @@ public class CoffeeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        var coffee = mapper.readValue(
-                req.getInputStream(),
-                Coffee.class);
 
-        var cafeSalvado = repository.create(coffee);
+        var coffee = mapper.readValue(req.getInputStream(), Coffee.class);
+
+        var coffeCreated = repo.create(coffee);
+
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_CREATED);
 
-        mapper.writeValue(resp.getWriter(), cafeSalvado);
+        mapper.writeValue(resp.getWriter(), coffeCreated);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        var coffee = mapper.readValue(
-                req.getInputStream(),
-                Coffee.class);
+        var coffee = mapper.readValue(req.getInputStream(), Coffee.class);
+        
+        Optional<Coffee> coffeeExists = repo.findById(coffee.getId());
 
-        var cafeAtualizado = repository.update(coffee);
+        if(coffeeExists.isEmpty()) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+        
+        var coffeeUpdated = repo.update(coffee);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
 
-        mapper.writeValue(resp.getWriter(), cafeAtualizado);
+        mapper.writeValue(resp.getWriter(), coffeeUpdated);
     }
 
     @Override
@@ -100,12 +102,11 @@ public class CoffeeServlet extends HttpServlet {
 
         if (pathInfo == null || pathInfo.equals("/")) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
         }
 
         Long id = Long.parseLong(pathInfo.substring(1));
 
-        repository.delete(id);
+        repo.delete(id);
 
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
