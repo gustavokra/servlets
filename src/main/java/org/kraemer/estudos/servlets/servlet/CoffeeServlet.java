@@ -1,7 +1,10 @@
-package org.kraemer.estudos.servlets;
+package org.kraemer.estudos.servlets.servlet;
 
 import java.io.IOException;
 import java.util.Optional;
+
+import org.kraemer.estudos.servlets.Coffee;
+import org.kraemer.estudos.servlets.CoffeeRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CoffeeServlet extends HttpServlet {
 
     @Inject
-    private CafeRepository repo;
+    private CoffeeRepository repo;
 
     @Inject
     private ObjectMapper mapper;
@@ -36,7 +39,7 @@ public class CoffeeServlet extends HttpServlet {
     private void findAll(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        var allCoffees = repo.listall();
+        var allCoffees = repo.listAll();
 
         resp.setContentType("application/json");
         mapper.writeValue(resp.getWriter(), allCoffees);
@@ -106,7 +109,7 @@ public class CoffeeServlet extends HttpServlet {
 
         Long id = Long.parseLong(pathInfo.substring(1));
 
-        repo.delete(id);
+        repo.remove(id);
 
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }

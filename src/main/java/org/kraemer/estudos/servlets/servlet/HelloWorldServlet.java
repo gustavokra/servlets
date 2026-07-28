@@ -1,4 +1,4 @@
-package org.kraemer.estudos.servlets;
+package org.kraemer.estudos.servlets.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
