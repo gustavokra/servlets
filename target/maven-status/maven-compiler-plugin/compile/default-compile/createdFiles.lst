@@ -1,7 +1,7 @@
 org/kraemer/estudos/servlets/Coffee.class
 org/kraemer/estudos/servlets/servlet/HelloWorldServlet.class
 org/kraemer/estudos/servlets/mapper/JacksonProducer.class
-org/kraemer/estudos/servlets/jax_rs/CoffeeResource.class
 org/kraemer/estudos/servlets/servlet/CoffeeServlet.class
+org/kraemer/estudos/servlets/jax_rs/CofeeResourcec.class
 org/kraemer/estudos/servlets/CoffeeRepository.class
 org/kraemer/estudos/servlets/jax_rs/RestApplication.class

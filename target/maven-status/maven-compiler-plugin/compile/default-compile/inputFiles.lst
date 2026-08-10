@@ -1,5 +1,6 @@
 /home/gustavo-kraemer/Documentos/Projetos/servlets/src/main/java/org/kraemer/estudos/servlets/Coffee.java
 /home/gustavo-kraemer/Documentos/Projetos/servlets/src/main/java/org/kraemer/estudos/servlets/CoffeeRepository.java
+/home/gustavo-kraemer/Documentos/Projetos/servlets/src/main/java/org/kraemer/estudos/servlets/jax_rs/CofeeResourcec.java
 /home/gustavo-kraemer/Documentos/Projetos/servlets/src/main/java/org/kraemer/estudos/servlets/jax_rs/CoffeeResource.java
 /home/gustavo-kraemer/Documentos/Projetos/servlets/src/main/java/org/kraemer/estudos/servlets/jax_rs/RestApplication.java
 /home/gustavo-kraemer/Documentos/Projetos/servlets/src/main/java/org/kraemer/estudos/servlets/mapper/JacksonProducer.java

@@ -1,69 +1,70 @@
 package org.kraemer.estudos.servlets.jax_rs;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Optional;
 
 import org.kraemer.estudos.servlets.Coffee;
 import org.kraemer.estudos.servlets.CoffeeRepository;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-@Path("/coffees")
-@Consumes(MediaType.APPLICATION_JSON)
+@Path("cafe")
 @Produces(MediaType.APPLICATION_JSON)
-public class CoffeeResource {
-
+@Consumes(MediaType.APPLICATION_JSON)
+public class CofeeResourcec {
+    
     @Inject
     private CoffeeRepository repo;
 
+
     @GET
-    public List<Coffee> findAll() {
-        return repo.listAll();
+    public Response listAll() {
+        return Response.ok(repo.listAll()).build();
     }
 
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
-
-        Optional<Coffee> coffee = repo.findById(id);
-
-        if (coffee.isEmpty()) {
+        var cafe = repo.findById(id);
+        if(cafe.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response.ok(coffee.get()).build();
+        return Response.ok(cafe.get()).build();
     }
 
     @POST
-    public Response create(Coffee coffee, @Context UriInfo uriInfo) {
-
-        Coffee created = repo.create(coffee);
+    public Response criar(@Context UriInfo uriInfo, Coffee coffee) {
+        var created = repo.create(coffee);
 
         URI location = uriInfo.getAbsolutePathBuilder()
-                .path(created.getId().toString())
-                .build();
+            .path(created.getId()
+            .toString()).build();
 
-        return Response.created(location)
-                .entity(created)
-                .build();
+
+        return Response.created(location).entity(created).build();
     }
 
-    @PUT
+    @PUT 
     public Response update(Coffee coffee) {
+        var exists = repo.findById(coffee.getId());
 
-        Optional<Coffee> coffeeExists = repo.findById(coffee.getId());
-
-        if (coffeeExists.isEmpty()) {
+        if(exists.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        Coffee updated = repo.update(coffee);
+        var updated = repo.update(coffee);
 
         return Response.ok(updated).build();
     }
@@ -71,10 +72,9 @@ public class CoffeeResource {
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
+        var exists = repo.findById(id);
 
-        Optional<Coffee> coffeeExists = repo.findById(id);
-
-        if (coffeeExists.isEmpty()) {
+        if(exists.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -82,4 +82,5 @@ public class CoffeeResource {
 
         return Response.noContent().build();
     }
+
 }
